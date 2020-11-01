@@ -38,6 +38,13 @@ def remaining_balance(loan: float, interest_rate: float, years: int, payments: i
 
 
 def loan_breakdown(loan: float, ir: float, years: int) -> list:
+    """
+    Calculate remaining balance per month
+    :param loan: initial loan amount
+    :param ir: interest rate
+    :param years: loan term in years
+    :return: remaining loan balance per month
+    """
     bal = []
     for i in range((years * 12 + 1)):
         bal.append(remaining_balance(loan, ir, years, i))
@@ -50,8 +57,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
 
+        # set minimum starting date to today
         self.start_date.setMinimumDate(QDate.currentDate())
 
+        # connect on_click method to push button
         self.calc_push.clicked.connect(self.calculate_clicked)
 
         # update loan amount
@@ -61,6 +70,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.radio_perc.toggled.connect(self.update_loan)
 
     def get_home_and_down_value(self) -> Tuple[float, float]:
+        """
+        Extract home value and down payment value inputted by the user
+        :return: home and down payment value
+        """
+
         home = float(self.home_value.text())
 
         if self.radio_euro.isChecked():
@@ -74,10 +88,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         return home, down
 
     def update_loan(self):
+        """
+        Dynamically update the loan amount
+        :return: updates the loan amount field
+        """
         home, down = self.get_home_and_down_value()
         self.loan_amount.setValue(int(home - down))
 
     def calculate_clicked(self):
+        """
+        On_click method for the calculate push button
+        :return:
+        """
         years = int(self.spin_years.text())
         loan_amount = float(self.loan_amount.text())
         ir = float(self.interest_spin.text())
@@ -101,6 +123,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.end_date.setText(str(end.toString()))
 
     def plot(self, month, balance):
+        """
+        Plots the remaining balance per month
+
+        :param month: month in loan payment
+        :param balance: remaining balance per month
+        :return:
+        """
         self.graphWidget.plot(month, balance)
 
 
