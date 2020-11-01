@@ -1,9 +1,47 @@
 from typing import Tuple
-
 from PyQt5 import QtWidgets, uic
+from PyQt5.QtCore import QDate
 
-qtcreator_file = "ui/app.ui"
-Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
+Ui_MainWindow, QtBaseClass = uic.loadUiType("ui/app.ui")
+
+
+def monthly_loan(loan: float, interest_rate: float, years: int) -> float:
+    """
+    Calculate monthly loan payment
+
+    :param loan: initial loan amount
+    :param interest_rate: interest rate
+    :param years: loan term in years
+    :return: monthly payment
+    """
+    n = years * 12
+    r = interest_rate / (100 * 12)  # interest per month
+    monthly_payment = loan * ((r * ((r + 1) ** n)) / (((r + 1) ** n) - 1))
+    return monthly_payment
+
+
+def remaining_balance(loan: float, interest_rate: float, years: int, payments: int) -> float:
+    """
+    Calculate the remaining loan balance
+
+    :param loan: initial loan amount
+    :param interest_rate: interest rate
+    :param years: loan term in years
+    :param payments: total number of payments made
+    :return: remaning balance
+    """
+    r = interest_rate / 1200  # monthly interest rate
+    m = r + 1
+    n = years * 12
+    remaining = loan * (((m ** n) - (m ** payments)) / ((m ** n) - 1))
+    return remaining
+
+
+def loan_breakdown(loan: float, ir: float, years: int) -> list:
+    bal = []
+    for i in range((years * 12 + 1)):
+        bal.append(remaining_balance(loan, ir, years, i))
+    return bal
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -11,6 +49,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
+
+        self.start_date.setMinimumDate(QDate.currentDate())
 
         self.calc_push.clicked.connect(self.calculate_clicked)
 
@@ -36,12 +76,32 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def update_loan(self):
         home, down = self.get_home_and_down_value()
         self.loan_amount.setValue(int(home - down))
-        print(down)
 
     def calculate_clicked(self):
-        years = float(self.spin_years.text())
+        years = int(self.spin_years.text())
         loan_amount = float(self.loan_amount.text())
         ir = float(self.interest_spin.text())
+
+        end = self.start_date.date().addYears(years)
+
+        try:
+            monthly = monthly_loan(loan_amount, ir, years)
+            self.monthly_payments.setText(str(round(monthly, 2)))
+            total_paid = monthly*12*years
+            self.total_interest.setText(str(round(total_paid-loan_amount, 2)))
+            self.total_paid.setText(str(round(total_paid, 2)))
+
+            balance = loan_breakdown(loan_amount, ir, years)
+            self.plot(range((years*12)+1), balance)
+        except ZeroDivisionError:
+            self.monthly_payments.setText("0")
+            self.total_interest.setText("0")
+            self.total_paid.setText("0")
+        finally:
+            self.end_date.setText(str(end.toString()))
+
+    def plot(self, month, balance):
+        self.graphWidget.plot(month, balance)
 
 
 if __name__ == "__main__":

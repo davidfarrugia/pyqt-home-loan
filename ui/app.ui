@@ -126,6 +126,23 @@
             </property>
            </widget>
           </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="label_10">
+            <property name="text">
+             <string>Start Date</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QDateEdit" name="start_date">
+            <property name="frame">
+             <bool>true</bool>
+            </property>
+            <property name="calendarPopup">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>
@@ -140,7 +157,7 @@
           <item row="1" column="0">
            <widget class="QLabel" name="label_4">
             <property name="text">
-             <string>Monthly Payments</string>
+             <string>Monthly Payment (€)</string>
             </property>
            </widget>
           </item>
@@ -168,7 +185,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLineEdit" name="lineEdit_4">
+           <widget class="QLineEdit" name="end_date">
             <property name="cursor">
              <cursorShape>ForbiddenCursor</cursorShape>
             </property>
@@ -188,7 +205,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QLineEdit" name="lineEdit_6">
+           <widget class="QLineEdit" name="total_interest">
             <property name="frame">
              <bool>false</bool>
             </property>
@@ -200,12 +217,12 @@
           <item row="4" column="0">
            <widget class="QLabel" name="label_9">
             <property name="text">
-             <string>Total Paid</string>
+             <string>Total Paid (€)</string>
             </property>
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QLineEdit" name="lineEdit_7">
+           <widget class="QLineEdit" name="total_paid">
             <property name="frame">
              <bool>false</bool>
             </property>
@@ -229,16 +246,23 @@
        </widget>
       </item>
       <item>
-       <widget class="QGraphicsView" name="graphicsView">
-        <property name="cursor" stdset="0">
-         <cursorShape>CrossCursor</cursorShape>
-        </property>
-        <property name="acceptDrops">
-         <bool>false</bool>
+       <widget class="Line" name="line_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="1" column="0">
+     <widget class="PlotWidget" name="graphWidget" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -251,15 +275,22 @@
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-   </widget>
-   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionhello">
+   <property name="text">
+    <string>hello</string>
+   </property>
+  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QWidget</extends>
+   <header>pyqtgraph</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
