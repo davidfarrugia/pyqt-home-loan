@@ -1,8 +1,10 @@
 from typing import Tuple
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QDate
+import os
 
-Ui_MainWindow, QtBaseClass = uic.loadUiType("ui/app.ui")
+ui_path = os.path.dirname(os.path.abspath(__file__))
+Ui_MainWindow, QtBaseClass = uic.loadUiType(os.path.join(ui_path, "ui/app.ui"))
 
 
 def monthly_loan(loan: float, interest_rate: float, years: int) -> float:
